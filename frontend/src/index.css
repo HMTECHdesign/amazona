@@ -99,11 +99,13 @@ img.medium {
 .price {
   font-size: 2rem;
 }
-/* Rating */
+/* Rating numReviews*/
 .rating span {
   color: #404040;
   
 }
+/* Rating  star*/
+
 .rating > span :last-child {
   color: #f0c040; 
   margin: 0.1rem;
