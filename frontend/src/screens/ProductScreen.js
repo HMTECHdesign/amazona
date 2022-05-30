@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useContext, useEffect, useReducer } from 'react';
 import { useParams } from 'react-router-dom';
-// import {useNavigate } from 'react-router-dom'; dont know the importance
+import {useNavigate } from 'react-router-dom'; 
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -31,7 +31,7 @@ const reducer = (state, action) => {
 };
 
 function ProductScreen() {
-  // const navigate = useNavigate(); dont know the importance
+  const navigate = useNavigate()
   const params = useParams();
   const { slug } = params;
 
@@ -54,6 +54,7 @@ function ProductScreen() {
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
     const { cart } = state;
+    
     const addToCartHandler = async () => {
       const existItem = cart.cartItems.find((x) => x._id === product._id);
       const quantity = existItem ? existItem.quantity + 1 : 1;
@@ -66,9 +67,16 @@ function ProductScreen() {
       type: 'CART_ADD_ITEM',
       payload: { ...product, quantity},
     });
+    
     // navigate('/cart'); dont know the importance
   };
-  
+  const {
+    cart: { cartItems },
+  } = state;
+  const checkoutHandler = () => {
+    navigate('/signin?redirect=/shipping');
+  };
+
   return loading ? (
     <LoadingBox>Loading...</LoadingBox>
   ) : error ? (
@@ -137,11 +145,38 @@ function ProductScreen() {
                 {product.countInStock > 0 && (
                   <ListGroup.Item>
                     <div className="d-grid">
-                    <Button onClick={addToCartHandler} variant="primary">
+                    <Button 
+                      onClick={addToCartHandler} 
+                      variant="primary">
                         Add to Cart
-                      </Button>                    </div>
+                    </Button>                   
+                    </div>
                   </ListGroup.Item>
                 )}
+                <ListGroup.Item>
+                <div className="d-grid">
+                    <Button
+                      type="button"
+                      variant="primary"
+                      onClick={checkoutHandler}
+                      disabled={cartItems.length === 0}
+                    >
+                      Proceed to Checkout
+                    </Button>
+                </div>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <div >
+                  <Link className="d-grid" to='/' >
+                    <Button
+                      type="button"
+                      variant="primary"
+                    >
+                      Continue to Shop
+                    </Button>
+                  </Link>
+                 </div>
+                </ListGroup.Item>
               </ListGroup>
             </Card.Body>
           </Card>
